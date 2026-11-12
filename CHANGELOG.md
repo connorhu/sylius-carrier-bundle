@@ -4,6 +4,8 @@ A csomag a [SemVer](https://semver.org/lang/hu/) szerint verziózódik. A `0.x` 
 
 ## [Nem kiadott]
 
+## [0.1.0] – 2026-11-12
+
 ### Hozzáadva
 
 - `CarrierShipmentInterface`, `CarrierShippingMethodInterface`.

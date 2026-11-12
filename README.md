@@ -27,6 +27,10 @@ Ez a csomag ezeket **egyszer** adja, a szállítók pedig csak a saját widgetj�
 
 **[`docs/installation.md`](docs/installation.md)** — a host öt lépése, és a szállító-pluginok szerződése (widget, esemény, admin-akció).
 
+## Verziózás
+
+[SemVer](https://semver.org/lang/hu/), tagolt kiadásokkal — a tartalmuk a [CHANGELOG.md](CHANGELOG.md)-ben. A `0.x` soron a host-szerződés (interfészek, hook-nevek, a widget-esemény) még mozoghat: `^0.1`-re érdemes constraintet írni, `dev-main`-re nem.
+
 ## Fejlesztés
 
 ```bash
