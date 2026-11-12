@@ -1,0 +1,7 @@
+codeconjure:
+    carrier:
+        checkout:
+            phone_number:
+                not_blank: "This shipping method needs the recipient's phone number."
+            pickup_point_id:
+                not_blank: 'This shipping method needs a pickup point.'

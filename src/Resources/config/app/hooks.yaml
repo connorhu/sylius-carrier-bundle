@@ -1,0 +1,13 @@
+sylius_twig_hooks:
+    hooks:
+        # ÚJ név a Sylius szállítmány-hookján, tehát a prepend() ténylegesen
+        # nyer, host-lépés nélkül. A két mező panelje; a szállítók widgetjei
+        # a sablon beágyazott `carrier_fields` hookjába kapcsolódnak.
+        #
+        # A két FOGLALT kulcs (a pénztár `…form.shipments` → `shipment`, és az
+        # admin `…shipments.item.actions` → `ship` `props.template`-je) a
+        # befogadó bolt két sora — l. docs/installation.md.
+        'sylius_shop.checkout.select_shipping.content.form.shipments.shipment':
+            carrier_fields:
+                template: '@CodeConjureSyliusCarrier/shop/checkout/select_shipping/carrier_fields.html.twig'
+                priority: -50

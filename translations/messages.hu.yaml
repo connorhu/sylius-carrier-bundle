@@ -1,0 +1,9 @@
+codeconjure:
+    carrier:
+        checkout:
+            phone_number:
+                label: 'A címzett telefonszáma'
+                help: 'A szállító ezen a számon értesít a csomagról.'
+            pickup_point:
+                title: 'Átvételi pont'
+                none_selected: 'Még nincs kiválasztott átvételi pont.'

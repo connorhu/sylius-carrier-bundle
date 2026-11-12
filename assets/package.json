@@ -1,0 +1,28 @@
+{
+    "name": "@codeconjure/sylius-carrier-bundle",
+    "description": "Szállító-semleges Sylius-alap a szállító-pluginokhoz: a pénztár közös mezői és a szállítók widgetjeinek szerződése.",
+    "license": "MIT",
+    "version": "1.0.0",
+    "type": "module",
+    "symfony": {
+        "controllers": {
+            "carrier-shipment": {
+                "main": "controllers/carrier_shipment_controller.js",
+                "name": "carrier-shipment",
+                "fetch": "eager",
+                "enabled": true
+            }
+        }
+    },
+    "scripts": {
+        "test": "vitest run"
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.2.2",
+        "jsdom": "^26.1.0",
+        "vitest": "^3.2.4"
+    }
+}

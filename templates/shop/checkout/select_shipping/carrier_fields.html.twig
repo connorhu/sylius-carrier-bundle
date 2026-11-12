@@ -1,0 +1,43 @@
+{# A szállítmány két szállító-független mezője a pénztárban
+   (`…form.shipments.shipment` → `carrier_fields`).
+
+   Mindkét szekció alapból REJTETT; a `carrier-shipment` controller (a
+   szállítmány wrapperén, l. `shipments.html.twig`) a választott mód
+   jelzői szerint mutatja. A KÖTELEZŐSÉGET a szerveroldal dönti el (a
+   `recipient_phone_required` / `pickup_point_required` validációs csoport).
+
+   Az átvételi pont szekciójában a szállítók widgetjei a beágyazott hookba
+   kapcsolódnak:
+
+       sylius_shop.checkout.select_shipping.content.form.shipments.shipment.carrier_fields
+
+   Egy widget a saját gyökérelemén `data-carrier-delivery-kinds="…"` listával
+   jelzi, melyik szállítási fajtákhoz tartozik, és a választott pontot a
+   `carrier:pickup-point-selected` eseménnyel (`detail: { id, label }`) adja
+   át — a mezőbe a controller ír. A widget NEM írja közvetlenül a mezőt, és
+   nem ad hozzá saját `pickupPointId` mezőt.
+
+   Az `is defined` őrök szándékosak: egy host felülírhatja (vagy elhagyhatja)
+   a mezőket, és ennek a sablonnak akkor sem szabad leállítania a pénztárt. #}
+{% set form = hookable_metadata.context.form %}
+
+{% if form.phoneNumber is defined %}
+    <div data-carrier-shipment-target="phoneSection" hidden class="my-3">
+        {{ form_row(form.phoneNumber) }}
+    </div>
+{% endif %}
+
+{% if form.pickupPointId is defined %}
+    <div data-carrier-shipment-target="pickupPointSection" hidden class="my-3">
+        <h5 class="mb-3">{{ 'codeconjure.carrier.checkout.pickup_point.title'|trans }}</h5>
+        {% hook 'carrier_fields' %}
+        {% set none_selected = 'codeconjure.carrier.checkout.pickup_point.none_selected'|trans %}
+        <p data-carrier-shipment-target="pickupPointLabel" data-placeholder="{{ none_selected }}">
+            {{- form.pickupPointId.vars.value is not empty
+                ? form.pickupPointId.vars.value
+                : none_selected -}}
+        </p>
+        {{ form_widget(form.pickupPointId) }}
+        {{ form_errors(form.pickupPointId) }}
+    </div>
+{% endif %}

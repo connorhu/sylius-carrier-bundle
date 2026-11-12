@@ -1,0 +1,34 @@
+{# Az admin rendelés-oldal szállítmány-paneljének `ship` slotja.
+
+   A `sylius_admin.order.show.content.sections.shipments.item.actions` →
+   `ship` hookable egy LiveComponent (`sylius_admin:shipment:ship_form`),
+   ami a megjelenítendő sablont `props.template`-ként kapja — EGY értéket.
+   A befogadó bolt ezt az egy sort erre a sablonra állítja, és innentől
+   minden szállító-plugin ide kapcsolódik, nem a host configjába:
+
+       codeconjure_carrier.admin.order.shipment.ship
+
+   Kontextus: `resource` (a szállítmány), `form` (a Sylius ship-űrlap
+   nézete), `attributes` (a LiveComponent attribútumai). A hookable a SAJÁT
+   módjainál rajzol, máshol semmit.
+
+   A `_prefixes: []` szándékos: a komponens-sablon nem hookable, de ha egy
+   későbbi Sylius-verzió hookable-metaadatot adna neki, a név akkor se
+   kapjon előtagot — a szerződés a fix név.
+
+   Ha egyetlen szállító sem rajzolt, a Sylius alapgombja jön. A „semmi" a
+   Twig Hooks debug-kommentjei NÉLKÜL értendő (`kernel.debug` mellett egy
+   üres hook is HTML-kommenteket ad). #}
+{% set carrier_action %}
+    {%- hook 'codeconjure_carrier.admin.order.shipment.ship' with {
+        resource: resource,
+        form: form,
+        attributes: attributes,
+        _prefixes: [],
+    } -%}
+{% endset %}
+{% if not codeconjure_hook_output_is_blank(carrier_action) %}
+    {{ carrier_action }}
+{% else %}
+    {{ include('@SyliusAdmin/shipment/component/ship.html.twig') }}
+{% endif %}
