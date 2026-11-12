@@ -1,0 +1,74 @@
+name: CI
+
+on:
+    push: ~
+    pull_request: ~
+    workflow_dispatch: ~
+
+permissions:
+    contents: read
+
+jobs:
+    php:
+        name: "PHP ${{ matrix.php }}, Sylius ${{ matrix.sylius }}"
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                # A `sylius/sylius: ^2.1` friss feloldásban a 2.3-as sort is
+                # megengedi (Symfony 8, DBAL 4). A csomag PHP-alapú service-
+                # konfigot használ (nem a Symfony 8-ban kivezetett XmlFileLoadert),
+                # de a támogatott sort a FoxPost plugin #205-ös döntéséig a
+                # szállító-pluginokkal együtt mérjük: 2.1 alsó határ, 2.2 a
+                # befogadó bolt sora.
+                include:
+                    - php: '8.4'
+                      sylius: '~2.1.0'
+                    - php: '8.4'
+                      sylius: '~2.2.0'
+                    - php: '8.5'
+                      sylius: '~2.2.0'
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  coverage: none
+
+            - name: A composer.json érvényessége
+              run: composer validate --strict
+
+            - uses: ramsey/composer-install@v3
+              with:
+                  dependency-versions: highest
+                  composer-options: "--with sylius/sylius:${{ matrix.sylius }}"
+
+            - name: A feloldott kulcsverziók
+              run: composer show --no-ansi | grep -E '^(sylius/sylius|sylius/twig-hooks|symfony/form|symfony/dependency-injection) '
+
+            - name: Unit tesztek
+              run: vendor/bin/phpunit
+
+            - name: PHPStan
+              run: vendor/bin/phpstan analyse -c phpstan.dist.neon --no-progress
+
+            - name: ECS
+              run: vendor/bin/ecs check --no-progress-bar
+
+    stimulus:
+        name: "Stimulus controller (Node 24)"
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: assets
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '24'
+
+            - run: npm ci
+
+            - run: npm test

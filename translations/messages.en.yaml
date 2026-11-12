@@ -1,0 +1,9 @@
+codeconjure:
+    carrier:
+        checkout:
+            phone_number:
+                label: "Recipient's phone number"
+                help: 'The carrier uses this number to notify you about the parcel.'
+            pickup_point:
+                title: 'Pickup point'
+                none_selected: 'No pickup point selected yet.'

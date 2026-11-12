@@ -1,0 +1,7 @@
+codeconjure:
+    carrier:
+        checkout:
+            phone_number:
+                not_blank: 'Ehhez a szállítási módhoz add meg a címzett telefonszámát.'
+            pickup_point_id:
+                not_blank: 'Ehhez a szállítási módhoz válassz átvételi pontot.'

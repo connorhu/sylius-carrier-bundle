@@ -1,0 +1,33 @@
+{# A pénztár 2. lépésének szállítmány-ciklusa, szállítmányonként egy
+   `carrier-shipment` Stimulus-hatókörrel.
+
+   A Sylius alapsablonja (`@SyliusShop/…/form/shipments/shipment.html.twig`)
+   közös elem nélkül rendereli a szállítmányokat — egy controllernek nincs
+   hová ülnie, ahonnan a mód rádiógombjait (`…shipment.choice`) ÉS a
+   mezőpanelt (`…shipment.carrier_fields`) is látja. Ez a sablon a Sylius
+   ciklusát ismétli, egy wrapperrel.
+
+   A `…form.shipments` → `shipment` kulcs a Syliusé, tehát a befogadó bolt
+   egy sora állítja ide (l. a telepítési leírást).
+
+   A `methods` érték a szállítmány módjainak szállító-semleges leírása
+   (`codeconjure_carrier_shipping_methods`) — így a controller nem függ attól,
+   hogy a host választókártya-sablonja milyen data-attribútumokat tesz ki.
+
+   Az `order` a beágyazott hookok kontextusába is bekerül: a Sylius
+   alapciklusa nem adja tovább, a szállítók widgetjeinek viszont kellhet (pl. a
+   szállítási cím országa). #}
+{% set form = hookable_metadata.context.form %}
+{% set order = hookable_metadata.context.order %}
+
+{% for key, shipment in order.shipments %}
+    {% set shipment_form = form.shipments[key] %}
+    <div
+        data-controller="carrier-shipment"
+        data-carrier-shipment-methods-value="{{ codeconjure_carrier_shipping_methods(shipment_form.method)|json_encode }}"
+    >
+        {% hook 'shipment' with { 'form': shipment_form, 'index': loop.index, 'order': order } %}
+    </div>
+{% else %}
+    {% hook 'shipment#unavailable' %}
+{% endfor %}
