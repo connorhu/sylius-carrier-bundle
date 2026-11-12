@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\CoreBundle\Form\Type\Checkout\ShipmentType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -70,6 +71,24 @@ final class CheckoutShipmentFieldsTest extends TestCase
         $attr = $this->shipmentForm()->get('pickupPointId')->getConfig()->getOption('attr');
 
         self::assertSame(['data-carrier-shipment-target' => 'pickupPointInput'], $attr);
+    }
+
+    /**
+     * A rejtett mező hibája a MEZŐN marad. A `HiddenType` alapból
+     * felbuborékoltatja a hibáit a szülőre — itt a szállítmány-űrlapra, amit
+     * se ennek a csomagnak a panelje, se egy host panelje nem ír ki (mindkettő
+     * a mező `form_errors()`-át rendereli). A „válassz átvételi pontot" és a
+     * szállítók pont-ellenőrzésének hibája így NÉMÁN elveszett: a vevő a 2.
+     * lépésen ragadt, üzenet nélkül (mérve a befogadó boltban, 2026-11-12).
+     */
+    public function testThePickupPointErrorStaysOnTheField(): void
+    {
+        $form = self::shipmentFormFactory()->create(ShipmentType::class, new CarrierShipment());
+        $form->submit(['pickupPointId' => 'X'], false);
+        $form->get('pickupPointId')->addError(new FormError('rossz pont'));
+
+        self::assertCount(1, $form->get('pickupPointId')->getErrors());
+        self::assertCount(0, $form->getErrors());
     }
 
     public function testSubmittingTheFormWritesBothFieldsOntoTheShipment(): void

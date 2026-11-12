@@ -37,6 +37,10 @@ final class CheckoutShipmentTypeExtension extends AbstractTypeExtension
     {
         $builder->add('pickupPointId', HiddenType::class, [
             'required' => false,
+            // A `HiddenType` alapból a szülőre buborékoltatja a hibáit — itt a
+            // szállítmány-űrlapra, amit egyetlen panel sem ír ki. A „válassz
+            // pontot" és a szállítók pont-ellenőrzése így némán elveszne.
+            'error_bubbling' => false,
             'attr' => ['data-carrier-shipment-target' => 'pickupPointInput'],
             'constraints' => [
                 new NotBlank(
