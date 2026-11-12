@@ -4,6 +4,13 @@ A csomag a [SemVer](https://semver.org/lang/hu/) szerint verziózódik. A `0.x` 
 
 ## [Nem kiadott]
 
+## [0.1.1] – 2026-11-12
+
+### Javítva
+
+- A Stimulus controller tesztjének `vitest` fejlesztői függősége `^4.1`-re áll. A `^3.2` mellett a befogadó bolt `npm install`-ja egy második vitest-3 fát (esbuilddal) telepített a `file:`-linkelt csomag alá, mert a Symfony UX csomagok már vitest 4-et hoznak — a bolt `package-lock.json`-ja ettől több ezer sorral változott.
+- `.gitattributes` `export-ignore`: a tesztek, a vitest-konfig és az assets-lock nem kerül a Composer dist-csomagba.
+
 ## [0.1.0] – 2026-11-12
 
 ### Hozzáadva
