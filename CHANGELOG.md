@@ -4,6 +4,12 @@ A csomag a [SemVer](https://semver.org/lang/hu/) szerint verziózódik. A `0.x` 
 
 ## [Nem kiadott]
 
+## [0.1.2] – 2026-11-12
+
+### Javítva
+
+- A `pickupPointId` mező hibája a mezőn marad (`error_bubbling: false`). A `HiddenType` alapból a szállítmány-űrlapra buborékoltatta, amit egyetlen panel sem ír ki — a „válassz átvételi pontot" és a szállítók pont-ellenőrzésének hibája így üzenet nélkül tartotta a vevőt a 2. lépésen.
+
 ## [0.1.1] – 2026-11-12
 
 ### Javítva
